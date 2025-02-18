@@ -1,4 +1,4 @@
-﻿﻿G:\ProjectsM.2\Neko Mekka\Assets\LavaLamp\Shaders\Editor﻿﻿using System;
+﻿﻿﻿﻿using System;
 using UnityEngine;
 using UnityEngine.Rendering;
 
