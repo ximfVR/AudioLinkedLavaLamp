@@ -1,0 +1,380 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: normalizedcrow_Lava Lamp
+  m_Shader: {fileID: 4800000, guid: bbc6518791535774e8981679d95d199c, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - LAVA_LAMP_BIND_DATA_AUTO
+  - LAVA_LAMP_BIND_NORMALS_SLOT_6
+  - LAVA_LAMP_BIND_POSITIONS_SLOT_5
+  - LAVA_LAMP_BIND_TANGENTS_SLOT_7
+  - LAVA_LAMP_USE_LIGHTING
+  - LAVA_LAMP_USE_TRANSPARENCY
+  m_InvalidKeywords:
+  - _LIGHTING_TOGGLE_ON
+  - _TRANSPARENCY_TOGGLE_ON
+  - _WRITEDEPTH_TOGGLE_ON
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 3000
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BackgroundCubemap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _CustomReflectionProbe:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MatCap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MatCapMap:
+        m_Texture: {fileID: 2800000, guid: b618c9dd35cb0914cbefbb0059aad2b8, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MatCapNormal:
+        m_Texture: {fileID: 2800000, guid: 283bad0d5d4fe0346af854125422694d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalMap:
+        m_Texture: {fileID: 2800000, guid: e8648184416be304da25eed8a06df62d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _RoughnessMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SDFTexture:
+        m_Texture: {fileID: 11700000, guid: 66e16c8cb6c92524a8adc82cbb1239ac, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TintMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _BindDataMode: 3
+    - _BindNormalsSlot: 6
+    - _BindPositionsSlot: 5
+    - _BindTangentsSlot: 7
+    - _Blur: 0
+    - _BlurFactor: 0
+    - _CullMode: 2
+    - _DepthIntersection_Toggle: 0
+    - _DepthOffset: 0
+    - _LavaBottomLightHeight0: -1
+    - _LavaBottomLightHeight1: -1
+    - _LavaBottomLightHeight10: -1
+    - _LavaBottomLightHeight11: -1
+    - _LavaBottomLightHeight12: -1
+    - _LavaBottomLightHeight13: -1
+    - _LavaBottomLightHeight14: -1
+    - _LavaBottomLightHeight15: -1
+    - _LavaBottomLightHeight2: -1
+    - _LavaBottomLightHeight3: -1
+    - _LavaBottomLightHeight4: -1
+    - _LavaBottomLightHeight5: -1
+    - _LavaBottomLightHeight6: -1
+    - _LavaBottomLightHeight7: -1
+    - _LavaBottomLightHeight8: -1
+    - _LavaBottomLightHeight9: -1
+    - _LavaBottomReservoirHeight0: -0.8
+    - _LavaBottomReservoirHeight1: -5
+    - _LavaBottomReservoirHeight10: -5
+    - _LavaBottomReservoirHeight11: -5
+    - _LavaBottomReservoirHeight12: -5
+    - _LavaBottomReservoirHeight13: -5
+    - _LavaBottomReservoirHeight14: -5
+    - _LavaBottomReservoirHeight15: -5
+    - _LavaBottomReservoirHeight2: -5
+    - _LavaBottomReservoirHeight3: -5
+    - _LavaBottomReservoirHeight4: -5
+    - _LavaBottomReservoirHeight5: -5
+    - _LavaBottomReservoirHeight6: -5
+    - _LavaBottomReservoirHeight7: -5
+    - _LavaBottomReservoirHeight8: -5
+    - _LavaBottomReservoirHeight9: -5
+    - _LavaColorThicknessScale0: 3.3
+    - _LavaColorThicknessScale1: 5
+    - _LavaColorThicknessScale10: 5
+    - _LavaColorThicknessScale11: 5
+    - _LavaColorThicknessScale12: 5
+    - _LavaColorThicknessScale13: 5
+    - _LavaColorThicknessScale14: 5
+    - _LavaColorThicknessScale15: 5
+    - _LavaColorThicknessScale2: 5
+    - _LavaColorThicknessScale3: 5
+    - _LavaColorThicknessScale4: 5
+    - _LavaColorThicknessScale5: 5
+    - _LavaColorThicknessScale6: 5
+    - _LavaColorThicknessScale7: 5
+    - _LavaColorThicknessScale8: 5
+    - _LavaColorThicknessScale9: 5
+    - _LavaLightFalloff0: 0.2
+    - _LavaLightFalloff1: 1
+    - _LavaLightFalloff10: 1
+    - _LavaLightFalloff11: 1
+    - _LavaLightFalloff12: 1
+    - _LavaLightFalloff13: 1
+    - _LavaLightFalloff14: 1
+    - _LavaLightFalloff15: 1
+    - _LavaLightFalloff2: 1
+    - _LavaLightFalloff3: 1
+    - _LavaLightFalloff4: 1
+    - _LavaLightFalloff5: 1
+    - _LavaLightFalloff6: 1
+    - _LavaLightFalloff7: 1
+    - _LavaLightFalloff8: 1
+    - _LavaLightFalloff9: 1
+    - _LavaMaxDriftSpeed: 1.52
+    - _LavaMaxSize: 0.55
+    - _LavaMaxSpeed: 0.19
+    - _LavaMinDriftSpeed: 0.5
+    - _LavaMinSize: 0.36
+    - _LavaMinSpeed: 0.07
+    - _LavaPadding: 0.034
+    - _LavaPerceptualRoughness: 0.64
+    - _LavaReflectiveness: 0.39
+    - _LavaScale0: 2
+    - _LavaScale1: 0.5
+    - _LavaScale10: 0.5
+    - _LavaScale11: 0.5
+    - _LavaScale12: 0.5
+    - _LavaScale13: 0.5
+    - _LavaScale14: 0.5
+    - _LavaScale15: 0.5
+    - _LavaScale2: 0.5
+    - _LavaScale3: 0.5
+    - _LavaScale4: 0.5
+    - _LavaScale5: 0.5
+    - _LavaScale6: 0.5
+    - _LavaScale7: 0.5
+    - _LavaScale8: 0.5
+    - _LavaScale9: 0.5
+    - _LavaSizeDistribution: 3
+    - _LavaSkipChance: 0.15
+    - _LavaSmoothingFactor: 0.252
+    - _LavaSoftDepthSize: 3
+    - _LavaSubregionCount: 1
+    - _LavaTopLightHeight0: 1
+    - _LavaTopLightHeight1: 1
+    - _LavaTopLightHeight10: 1
+    - _LavaTopLightHeight11: 1
+    - _LavaTopLightHeight12: 1
+    - _LavaTopLightHeight13: 1
+    - _LavaTopLightHeight14: 1
+    - _LavaTopLightHeight15: 1
+    - _LavaTopLightHeight2: 1
+    - _LavaTopLightHeight3: 1
+    - _LavaTopLightHeight4: 1
+    - _LavaTopLightHeight5: 1
+    - _LavaTopLightHeight6: 1
+    - _LavaTopLightHeight7: 1
+    - _LavaTopLightHeight8: 1
+    - _LavaTopLightHeight9: 1
+    - _LavaTopReservoirHeight0: 20.79
+    - _LavaTopReservoirHeight1: 5
+    - _LavaTopReservoirHeight10: 5
+    - _LavaTopReservoirHeight11: 5
+    - _LavaTopReservoirHeight12: 5
+    - _LavaTopReservoirHeight13: 5
+    - _LavaTopReservoirHeight14: 5
+    - _LavaTopReservoirHeight15: 5
+    - _LavaTopReservoirHeight2: 5
+    - _LavaTopReservoirHeight3: 5
+    - _LavaTopReservoirHeight4: 5
+    - _LavaTopReservoirHeight5: 5
+    - _LavaTopReservoirHeight6: 5
+    - _LavaTopReservoirHeight7: 5
+    - _LavaTopReservoirHeight8: 5
+    - _LavaTopReservoirHeight9: 5
+    - _LavaTouchingSideBlendSize: 0.03
+    - _LavaVerticalSeparation: 1
+    - _LavaWaterHazeStrength0: 0
+    - _LavaWaterHazeStrength1: 0
+    - _LavaWaterHazeStrength10: 0
+    - _LavaWaterHazeStrength11: 0
+    - _LavaWaterHazeStrength12: 0
+    - _LavaWaterHazeStrength13: 0
+    - _LavaWaterHazeStrength14: 0
+    - _LavaWaterHazeStrength15: 0
+    - _LavaWaterHazeStrength2: 0
+    - _LavaWaterHazeStrength3: 0
+    - _LavaWaterHazeStrength4: 0
+    - _LavaWaterHazeStrength5: 0
+    - _LavaWaterHazeStrength6: 0
+    - _LavaWaterHazeStrength7: 0
+    - _LavaWaterHazeStrength8: 0
+    - _LavaWaterHazeStrength9: 0
+    - _LavaWaterTintStrength0: 1
+    - _LavaWaterTintStrength1: 1
+    - _LavaWaterTintStrength10: 1
+    - _LavaWaterTintStrength11: 1
+    - _LavaWaterTintStrength12: 1
+    - _LavaWaterTintStrength13: 1
+    - _LavaWaterTintStrength14: 1
+    - _LavaWaterTintStrength15: 1
+    - _LavaWaterTintStrength2: 1
+    - _LavaWaterTintStrength3: 1
+    - _LavaWaterTintStrength4: 1
+    - _LavaWaterTintStrength5: 1
+    - _LavaWaterTintStrength6: 1
+    - _LavaWaterTintStrength7: 1
+    - _LavaWaterTintStrength8: 1
+    - _LavaWaterTintStrength9: 1
+    - _Lighting_Toggle: 1
+    - _MatCapAlpha: 1
+    - _MatCapNormalStrength: 0
+    - _MaxPerceptualRoughness: 1
+    - _MaxSpecularHighlightBrightness: -1
+    - _MinPerceptualRoughness: 0
+    - _MinThickness: 1.5
+    - _NormalStrength: 1
+    - _Reflectiveness: 0
+    - _RefractiveIndex: 1.5
+    - _RimIntensity: 0
+    - _RimPower: 1
+    - _SDFPixelSize: 1
+    - _TintHueShift: 0
+    - _Transparency_Toggle: 1
+    - _UseBackgroundCubemap: 0
+    - _UseCustomReflectionProbe: 0
+    - _WorldRecale: 1
+    - _WriteDepth_Toggle: 1
+    - _ZWrite: 1
+    m_Colors:
+    - _BackgroundColor: {r: 1, g: 1, b: 1, a: 0}
+    - _LavaBottomLightColor0: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaBottomLightColor1: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaBottomLightColor10: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaBottomLightColor11: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaBottomLightColor12: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaBottomLightColor13: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaBottomLightColor14: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaBottomLightColor15: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaBottomLightColor2: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaBottomLightColor3: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaBottomLightColor4: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaBottomLightColor5: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaBottomLightColor6: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaBottomLightColor7: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaBottomLightColor8: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaBottomLightColor9: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaCoreColor0: {r: 1, g: 0.8768307, b: 0, a: 1}
+    - _LavaCoreColor1: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaCoreColor10: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaCoreColor11: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaCoreColor12: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaCoreColor13: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaCoreColor14: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaCoreColor15: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaCoreColor2: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaCoreColor3: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaCoreColor4: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaCoreColor5: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaCoreColor6: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaCoreColor7: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaCoreColor8: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaCoreColor9: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaEdgeColor0: {r: 1, g: 0, b: 0, a: 1}
+    - _LavaEdgeColor1: {r: 0.75, g: 0.75, b: 0.75, a: 1}
+    - _LavaEdgeColor10: {r: 0.75, g: 0.75, b: 0.75, a: 1}
+    - _LavaEdgeColor11: {r: 0.75, g: 0.75, b: 0.75, a: 1}
+    - _LavaEdgeColor12: {r: 0.75, g: 0.75, b: 0.75, a: 1}
+    - _LavaEdgeColor13: {r: 0.75, g: 0.75, b: 0.75, a: 1}
+    - _LavaEdgeColor14: {r: 0.75, g: 0.75, b: 0.75, a: 1}
+    - _LavaEdgeColor15: {r: 0.75, g: 0.75, b: 0.75, a: 1}
+    - _LavaEdgeColor2: {r: 0.75, g: 0.75, b: 0.75, a: 1}
+    - _LavaEdgeColor3: {r: 0.75, g: 0.75, b: 0.75, a: 1}
+    - _LavaEdgeColor4: {r: 0.75, g: 0.75, b: 0.75, a: 1}
+    - _LavaEdgeColor5: {r: 0.75, g: 0.75, b: 0.75, a: 1}
+    - _LavaEdgeColor6: {r: 0.75, g: 0.75, b: 0.75, a: 1}
+    - _LavaEdgeColor7: {r: 0.75, g: 0.75, b: 0.75, a: 1}
+    - _LavaEdgeColor8: {r: 0.75, g: 0.75, b: 0.75, a: 1}
+    - _LavaEdgeColor9: {r: 0.75, g: 0.75, b: 0.75, a: 1}
+    - _LavaFlowDirection0: {r: 0, g: 1, b: 0, a: 0}
+    - _LavaFlowDirection1: {r: 0, g: 1, b: 0, a: 0}
+    - _LavaFlowDirection10: {r: 0, g: 1, b: 0, a: 0}
+    - _LavaFlowDirection11: {r: 0, g: 1, b: 0, a: 0}
+    - _LavaFlowDirection12: {r: 0, g: 1, b: 0, a: 0}
+    - _LavaFlowDirection13: {r: 0, g: 1, b: 0, a: 0}
+    - _LavaFlowDirection14: {r: 0, g: 1, b: 0, a: 0}
+    - _LavaFlowDirection15: {r: 0, g: 1, b: 0, a: 0}
+    - _LavaFlowDirection2: {r: 0, g: 1, b: 0, a: 0}
+    - _LavaFlowDirection3: {r: 0, g: 1, b: 0, a: 0}
+    - _LavaFlowDirection4: {r: 0, g: 1, b: 0, a: 0}
+    - _LavaFlowDirection5: {r: 0, g: 1, b: 0, a: 0}
+    - _LavaFlowDirection6: {r: 0, g: 1, b: 0, a: 0}
+    - _LavaFlowDirection7: {r: 0, g: 1, b: 0, a: 0}
+    - _LavaFlowDirection8: {r: 0, g: 1, b: 0, a: 0}
+    - _LavaFlowDirection9: {r: 0, g: 1, b: 0, a: 0}
+    - _LavaTopLightColor0: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaTopLightColor1: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaTopLightColor10: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaTopLightColor11: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaTopLightColor12: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaTopLightColor13: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaTopLightColor14: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaTopLightColor15: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaTopLightColor2: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaTopLightColor3: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaTopLightColor4: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaTopLightColor5: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaTopLightColor6: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaTopLightColor7: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaTopLightColor8: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaTopLightColor9: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaWaterHazeColor0: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaWaterHazeColor1: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaWaterHazeColor10: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaWaterHazeColor11: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaWaterHazeColor12: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaWaterHazeColor13: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaWaterHazeColor14: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaWaterHazeColor15: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaWaterHazeColor2: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaWaterHazeColor3: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaWaterHazeColor4: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaWaterHazeColor5: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaWaterHazeColor6: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaWaterHazeColor7: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaWaterHazeColor8: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaWaterHazeColor9: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaWaterTintColor0: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaWaterTintColor1: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaWaterTintColor10: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaWaterTintColor11: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaWaterTintColor12: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaWaterTintColor13: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaWaterTintColor14: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaWaterTintColor15: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaWaterTintColor2: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaWaterTintColor3: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaWaterTintColor4: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaWaterTintColor5: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaWaterTintColor6: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaWaterTintColor7: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaWaterTintColor8: {r: 1, g: 1, b: 1, a: 1}
+    - _LavaWaterTintColor9: {r: 1, g: 1, b: 1, a: 1}
+    - _RimColor: {r: 1, g: 0.8395166, b: 0, a: 1}
+    - _SDFLowerCorner: {r: 0, g: 0, b: 0, a: 0}
+    - _SDFSize: {r: 1, g: 1, b: 1, a: 0}
+    - _Tint: {r: 1, g: 0, b: 0, a: 1}
+  m_BuildTextureStacks: []
