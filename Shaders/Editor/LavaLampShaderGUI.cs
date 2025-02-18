@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿G:\ProjectsM.2\Neko Mekka\Assets\LavaLamp\Shaders\Editor﻿﻿using System;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -194,6 +194,7 @@ namespace UnityEditor
         private struct LavaSubregionProperties
         {
             public MaterialProperty lavaScale;
+            public MaterialProperty lavaHueShift;
             public MaterialProperty lavaTopReservoirHeight;
             public MaterialProperty lavaBottomReservoirHeight;
             public MaterialProperty lavaCoreColor;
@@ -213,6 +214,7 @@ namespace UnityEditor
             public void FindProperties(MaterialProperty[] props, int index)
             {
                 lavaScale = FindProperty("_LavaScale" + index, props);
+                lavaHueShift = FindProperty("_LavaHueShift" + index, props);
                 lavaTopReservoirHeight = FindProperty("_LavaTopReservoirHeight" + index, props);
                 lavaBottomReservoirHeight = FindProperty("_LavaBottomReservoirHeight" + index, props);
                 lavaCoreColor = FindProperty("_LavaCoreColor" + index, props);
@@ -417,6 +419,7 @@ namespace UnityEditor
                         EditorGUILayout.Space();
 
                         materialEditor.ShaderProperty(properties.subregions[i].lavaScale, "Scale");
+                        materialEditor.ShaderProperty(properties.subregions[i].lavaHueShift, "Hue Shift");
 
                         GUILayout.Label("Lava Reservoirs");
                         EditorGUI.indentLevel++;
