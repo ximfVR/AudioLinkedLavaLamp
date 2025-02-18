@@ -32,10 +32,12 @@ inline float GGXDistribution(float nDotH, float roughness)
 //Schlick-Beckmann approximation remapped for GGX and pre-combined with the BRDF denominator
 inline float GeometrySmithGGX(float nDotL, float nDotV, float roughness)
 {
-    float incoming = (nDotL * (2.0 - roughness)) + roughness;
+    /*float incoming = (nDotL * (2.0 - roughness)) + roughness;
     float outgoing = (nDotV * (2.0 - roughness)) + roughness;
+    return saturate(1.0 / (incoming * outgoing));*/
 
-    return saturate(1.0 / (incoming * outgoing));
+    float2 res = float2(nDotL, nDotV) * (2.0 - roughness) + roughness;
+    return saturate(rcp(res.x * res.y));
 }
 
 inline float GGXCookTorrance(float3 surfaceNormal, float3 viewDirection, float3 lightDirection, float roughness, float reflectiveness)
@@ -59,7 +61,9 @@ inline float GGXCookTorrance(float3 surfaceNormal, float3 viewDirection, float3 
 float3 GetDirectSpecularLighting(float3 worldPos, float3 normal, float3 viewDirection, float roughness, float reflectiveness, float attenuation)
 {
     //when _WorldSpaceLightPos0.w == 0 then _WorldSpaceLightPos0.xyz is a directional light direction
-    float3 lightDirection = (_WorldSpaceLightPos0.w < 0.5) ? normalize(_WorldSpaceLightPos0.xyz) : normalize(_WorldSpaceLightPos0.xyz - worldPos.xyz);
+    //float3 lightDirection = (_WorldSpaceLightPos0.w < 0.5) ? normalize(_WorldSpaceLightPos0.xyz) : normalize(_WorldSpaceLightPos0.xyz - worldPos.xyz);
+
+    float3 lightDirection = normalize(_WorldSpaceLightPos0.xyz - worldPos.xyz * step(0.5, _WorldSpaceLightPos0.w));
 
     //multiply by PI because Unity dosn't use the 1/PI normalization term for diffuse, so the specular brightness is instead increased to match it
     return _LightColor0.rgb * attenuation * GGXCookTorrance(normal, viewDirection, lightDirection, roughness, reflectiveness) * UNITY_PI;

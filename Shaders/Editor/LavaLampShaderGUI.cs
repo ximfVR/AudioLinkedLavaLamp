@@ -15,6 +15,7 @@ namespace UnityEditor
         private static bool sLavaSharedPropertiesFoldout = true;
         private static bool sLavaSubregionsOverallFoldout = true;
         private static bool sAdvancedOptionsFoldout = true;
+        private static bool sAudioLinkOptionsFoldout = false;
         private static bool[] sSubregionFoldouts = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true };
 
         bool mFirstTimeApply = true;
@@ -31,9 +32,20 @@ namespace UnityEditor
             public MaterialProperty normalStrength;
             public MaterialProperty tintMap;
             public MaterialProperty tint;
+            public MaterialProperty tintHueShift; //custom
+            public MaterialProperty tintBrightness; //custom
+            public MaterialProperty matcapMap; //custom
+            public MaterialProperty matcapAlpha; //custom
+            public MaterialProperty matcapColorize; //custom
+            public MaterialProperty matcapHueShift; //custom
+            public MaterialProperty rimColor; //custom
+            public MaterialProperty rimHue; //custom
+            public MaterialProperty rimIntensity; //custom
+            public MaterialProperty rimPower; //custom
             public MaterialProperty customReflectionProbe;
             public MaterialProperty useCustomReflectionProbe;
             public MaterialProperty refractiveIndex;
+            public MaterialProperty blurFactor; //custom
             public MaterialProperty backgroundColor;
             public MaterialProperty backgroundCubemap;
             public MaterialProperty useBackgroundCubemap;
@@ -75,6 +87,20 @@ namespace UnityEditor
             public MaterialProperty toggleDepthIntersection;
             public MaterialProperty writeDepth;
             
+
+            public MaterialProperty lavaReactiveColorRed;
+            public MaterialProperty lavaReactiveColorGreen;
+            public MaterialProperty lavaReactiveColorBlue;
+            public MaterialProperty lavaLampEnableAudioLinkScale;
+            public MaterialProperty lavaLampEnableAudioLinkScroll;
+            public MaterialProperty lavaLampEnableAudioLinkColor;
+            public MaterialProperty lavaLampEnableAudioLink;
+            public MaterialProperty lavaLampResizeTargetChannel;
+            public MaterialProperty lavaLampScrollTargetChannel;
+            public MaterialProperty lavaLampReactiveResizeModifier;
+            public MaterialProperty lavaLampScrollAdjustment;
+            public MaterialProperty lavaLampColorTargetChannel;
+
             public LavaSubregionProperties[] subregions;
 
             public Properties(MaterialProperty[] props)
@@ -87,9 +113,20 @@ namespace UnityEditor
                 normalStrength = FindProperty("_NormalStrength", props);
                 tintMap = FindProperty("_TintMap", props);
                 tint = FindProperty("_Tint", props);
+                tintHueShift = FindProperty("_TintHueShift", props); //custom
+                tintBrightness = FindProperty("_TintBrightness", props); //custom
+                matcapMap = FindProperty("_MatCapMap", props); //custom
+                matcapAlpha = FindProperty("_MatCapAlpha", props); //custom
+                matcapColorize = FindProperty("_MatCapColorize", props); //custom
+                matcapHueShift = FindProperty("_MatCapHueShift", props); //custom
+                rimColor = FindProperty("_RimColor", props); //custom
+                rimHue = FindProperty("_RimHue", props); //custom
+                rimIntensity = FindProperty("_RimIntensity", props); //custom
+                rimPower = FindProperty("_RimPower", props); //custom
                 customReflectionProbe = FindProperty("_CustomReflectionProbe", props);
                 useCustomReflectionProbe = FindProperty("_UseCustomReflectionProbe", props);
                 refractiveIndex = FindProperty("_RefractiveIndex", props);
+                blurFactor = FindProperty("_BlurFactor", props); //custom
                 backgroundColor = FindProperty("_BackgroundColor", props);
                 backgroundCubemap = FindProperty("_BackgroundCubemap", props); ;
                 useBackgroundCubemap = FindProperty("_UseBackgroundCubemap", props); ;
@@ -131,6 +168,20 @@ namespace UnityEditor
                 toggleDepthIntersection = FindProperty("_DepthIntersection_Toggle", props);
                 writeDepth = FindProperty("_WriteDepth_Toggle", props);
                 
+
+                lavaReactiveColorRed = FindProperty("_LavaReactiveColorOffsetRed", props);
+                lavaReactiveColorGreen = FindProperty("_LavaReactiveColorOffsetGreen", props);
+                lavaReactiveColorBlue = FindProperty("_LavaReactiveColorOffsetBlue", props);
+                lavaLampEnableAudioLinkScale = FindProperty("_LavaLampEnableAudioLinkResize_Toggle", props);
+                lavaLampEnableAudioLinkScroll = FindProperty("_LavaLampEnableAudioLinkScroll_Toggle", props);
+                lavaLampEnableAudioLinkColor = FindProperty("_LavaLampEnableAudioLinkColor_Toggle", props);
+                lavaLampEnableAudioLink = FindProperty("_LavaLampEnableAudioLink_Toggle", props);
+                lavaLampResizeTargetChannel = FindProperty("_LavaLampResizeTargetChannel", props);
+                lavaLampScrollTargetChannel = FindProperty("_LavaLampScrollTargetChannel", props);
+                lavaLampReactiveResizeModifier = FindProperty("_LavaLampReactiveResizeModifier", props);
+                lavaLampScrollAdjustment = FindProperty("_LavaLampScrollAdjustment", props);
+                lavaLampColorTargetChannel = FindProperty("_LavaLampColorTargetChannel", props);
+
                 subregions = new LavaSubregionProperties[cMaxSubregions];
 
                 for (int i = 0; i < subregions.Length; i++)
@@ -268,13 +319,33 @@ namespace UnityEditor
                 materialEditor.TextureScaleOffsetProperty(properties.normalMap);
                 EditorGUI.indentLevel--;
 
+                
+                materialEditor.TexturePropertySingleLine(new GUIContent("MatCap"), properties.matcapMap, properties.matcapAlpha);
+                EditorGUI.indentLevel++;
+                materialEditor.ShaderProperty(properties.matcapHueShift, "MatCap HueShift");
+                materialEditor.ShaderProperty(properties.matcapColorize, "MatCap Colorize");
+                EditorGUI.indentLevel--;
+
                 materialEditor.TexturePropertySingleLine(new GUIContent("Tint"), properties.tintMap, properties.tint);
                 EditorGUI.indentLevel++;
+                materialEditor.ShaderProperty(properties.tintHueShift, "Global HueShift");
+                materialEditor.ShaderProperty(properties.tintBrightness, "Global Brightness");
                 materialEditor.TextureScaleOffsetProperty(properties.tintMap);
                 EditorGUI.indentLevel--;
 
+                
+                //custom ext
+                materialEditor.ShaderProperty(properties.rimColor, "RimLight");
+                EditorGUI.indentLevel++;
+                materialEditor.ShaderProperty(properties.rimHue, "Rim HueShift");
+                materialEditor.ShaderProperty(properties.rimIntensity, "Rim Intensity");
+                materialEditor.ShaderProperty(properties.rimPower, "Rim Power");
+                EditorGUI.indentLevel--;
+                
+
                 materialEditor.TexturePropertySingleLine(new GUIContent("Reflection Probe Override"), properties.customReflectionProbe, properties.useCustomReflectionProbe);
                 materialEditor.ShaderProperty(properties.refractiveIndex, "Refractive Index");
+                materialEditor.ShaderProperty(properties.blurFactor, "Blur Factor");
                 materialEditor.ShaderProperty(properties.backgroundColor, "Background Color");
                 materialEditor.TexturePropertySingleLine(new GUIContent("Background Cubemap"), properties.backgroundCubemap, properties.useBackgroundCubemap);
             }
@@ -469,8 +540,32 @@ namespace UnityEditor
                     materialEditor.ShaderProperty(properties.writeDepth, "Write Depth");
                 }
 
+
+                
                 materialEditor.EnableInstancingField();
                 materialEditor.DoubleSidedGIField();
+            }
+
+            //Audiolink Options
+            sAudioLinkOptionsFoldout = EditorGUILayout.Foldout(sAudioLinkOptionsFoldout, "Audiolink Options", true, EditorStyles.foldoutHeader);
+
+            if (sAudioLinkOptionsFoldout)
+            {
+
+                materialEditor.ShaderProperty(properties.lavaLampEnableAudioLink, "Enable Audio Link");
+                materialEditor.ShaderProperty(properties.lavaLampEnableAudioLinkColor, "Enable Audio Link Color");
+                materialEditor.ShaderProperty(properties.lavaLampEnableAudioLinkScroll, "Enable Audio Link Scroll Modification");
+                materialEditor.ShaderProperty(properties.lavaLampEnableAudioLinkScale, "Enable Audio Link Resizing");
+
+                materialEditor.ShaderProperty(properties.lavaLampColorTargetChannel, "Target Channel For Lava Lamp Color");
+                materialEditor.ShaderProperty(properties.lavaReactiveColorRed, "Reactive Lava Color Offset Red");
+                materialEditor.ShaderProperty(properties.lavaReactiveColorGreen, "Reactive Lava Color Offset Green");
+                materialEditor.ShaderProperty(properties.lavaReactiveColorBlue, "Reactive Lava Color Offset Blue");
+
+                materialEditor.ShaderProperty(properties.lavaLampResizeTargetChannel, "Target Channel For Lava Lamp Resize");
+                materialEditor.ShaderProperty(properties.lavaLampReactiveResizeModifier, "Lava Lamp Resize Multiplier");
+                materialEditor.ShaderProperty(properties.lavaLampScrollTargetChannel, "Target Channel For Lava Lamp Scroll");
+                materialEditor.ShaderProperty(properties.lavaLampScrollAdjustment, "Lava Lamp Scroll Adjustment");
             }
 
             return EditorGUI.EndChangeCheck(); //return if anything was changed
