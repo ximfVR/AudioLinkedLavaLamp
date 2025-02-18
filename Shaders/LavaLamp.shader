@@ -1,4 +1,4 @@
-﻿Shader "normalizedcrow/Lava Lamp"
+﻿﻿Shader "normalizedcrow/Lava Lamp"
 {
     Properties
     {
@@ -48,6 +48,7 @@
         
         //Subregion 0
         [PowerSlider(2.72)] _LavaScale0("Scale", Range(0.001, 2.0)) = 0.5
+_LavaHueShift0("Hue Shift", Range(0.0, 1.0)) = 0.0
         _LavaTopReservoirHeight0("Top Reservoir Height", Float) = 5.0
         _LavaBottomReservoirHeight0("Bottom Reservoir Height", Float) = -5.0
         _LavaCoreColor0("Lava Core Color", Color) = (1.0, 1.0, 1.0, 1.0)
@@ -64,8 +65,8 @@
         [PowerSlider(2.72)] _LavaLightFalloff0("Light Falloff Scale", Range(0.0, 100.0)) = 1.0
         _LavaFlowDirection0("Flow Direction", Vector) = (0.0, 1.0, 0.0, 0.0)
 
-        //Subregion 1
-        [PowerSlider(2.72)] _LavaScale1("Scale", Range(0.001, 2.0)) = 0.5
+[PowerSlider(2.72)] _LavaScale1("Scale", Range(0.001, 2.0)) = 0.5
+_LavaHueShift1("Hue Shift", Range(0.0, 1.0)) = 0.0
         _LavaTopReservoirHeight1("Top Reservoir Height", Float) = 5.0
         _LavaBottomReservoirHeight1("Bottom Reservoir Height", Float) = -5.0
         _LavaCoreColor1("Lava Core Color", Color) = (1.0, 1.0, 1.0, 1.0)
@@ -82,8 +83,8 @@
         [PowerSlider(2.72)] _LavaLightFalloff1("Light Falloff Scale", Range(0.0, 100.0)) = 1.0
         _LavaFlowDirection1("Flow Direction", Vector) = (0.0, 1.0, 0.0, 0.0)
 
-        //Subregion 2
-        [PowerSlider(2.72)] _LavaScale2("Scale", Range(0.001, 2.0)) = 0.5
+[PowerSlider(2.72)] _LavaScale2("Scale", Range(0.001, 2.0)) = 0.5
+_LavaHueShift2("Hue Shift", Range(0.0, 1.0)) = 0.0
         _LavaTopReservoirHeight2("Top Reservoir Height", Float) = 5.0
         _LavaBottomReservoirHeight2("Bottom Reservoir Height", Float) = -5.0
         _LavaCoreColor2("Lava Core Color", Color) = (1.0, 1.0, 1.0, 1.0)
@@ -100,8 +101,8 @@
         [PowerSlider(2.72)] _LavaLightFalloff2("Light Falloff Scale", Range(0.0, 100.0)) = 1.0
         _LavaFlowDirection2("Flow Direction", Vector) = (0.0, 1.0, 0.0, 0.0)
 
-        //Subregion 3
-        [PowerSlider(2.72)] _LavaScale3("Scale", Range(0.001, 2.0)) = 0.5
+[PowerSlider(2.72)] _LavaScale3("Scale", Range(0.001, 2.0)) = 0.5
+_LavaHueShift3("Hue Shift", Range(0.0, 1.0)) = 0.0
         _LavaTopReservoirHeight3("Top Reservoir Height", Float) = 5.0
         _LavaBottomReservoirHeight3("Bottom Reservoir Height", Float) = -5.0
         _LavaCoreColor3("Lava Core Color", Color) = (1.0, 1.0, 1.0, 1.0)
@@ -118,8 +119,8 @@
         [PowerSlider(2.72)] _LavaLightFalloff3("Light Falloff Scale", Range(0.0, 100.0)) = 1.0
         _LavaFlowDirection3("Flow Direction", Vector) = (0.0, 1.0, 0.0, 0.0)
 
-        //Subregion 4
-        [PowerSlider(2.72)] _LavaScale4("Scale", Range(0.001, 2.0)) = 0.5
+[PowerSlider(2.72)] _LavaScale4("Scale", Range(0.001, 2.0)) = 0.5
+_LavaHueShift4("Hue Shift", Range(0.0, 1.0)) = 0.0
         _LavaTopReservoirHeight4("Top Reservoir Height", Float) = 5.0
         _LavaBottomReservoirHeight4("Bottom Reservoir Height", Float) = -5.0
         _LavaCoreColor4("Lava Core Color", Color) = (1.0, 1.0, 1.0, 1.0)
@@ -136,8 +137,8 @@
         [PowerSlider(2.72)] _LavaLightFalloff4("Light Falloff Scale", Range(0.0, 100.0)) = 1.0
         _LavaFlowDirection4("Flow Direction", Vector) = (0.0, 1.0, 0.0, 0.0)
 
-        //Subregion 5
-        [PowerSlider(2.72)] _LavaScale5("Scale", Range(0.001, 2.0)) = 0.5
+[PowerSlider(2.72)] _LavaScale5("Scale", Range(0.001, 2.0)) = 0.5
+_LavaHueShift5("Hue Shift", Range(0.0, 1.0)) = 0.0
         _LavaTopReservoirHeight5("Top Reservoir Height", Float) = 5.0
         _LavaBottomReservoirHeight5("Bottom Reservoir Height", Float) = -5.0
         _LavaCoreColor5("Lava Core Color", Color) = (1.0, 1.0, 1.0, 1.0)
@@ -154,8 +155,8 @@
         [PowerSlider(2.72)] _LavaLightFalloff5("Light Falloff Scale", Range(0.0, 100.0)) = 1.0
         _LavaFlowDirection5("Flow Direction", Vector) = (0.0, 1.0, 0.0, 0.0)
 
-        //Subregion 6
-        [PowerSlider(2.72)] _LavaScale6("Scale", Range(0.001, 2.0)) = 0.5
+[PowerSlider(2.72)] _LavaScale6("Scale", Range(0.001, 2.0)) = 0.5
+_LavaHueShift6("Hue Shift", Range(0.0, 1.0)) = 0.0
         _LavaTopReservoirHeight6("Top Reservoir Height", Float) = 5.0
         _LavaBottomReservoirHeight6("Bottom Reservoir Height", Float) = -5.0
         _LavaCoreColor6("Lava Core Color", Color) = (1.0, 1.0, 1.0, 1.0)
@@ -172,8 +173,8 @@
         [PowerSlider(2.72)] _LavaLightFalloff6("Light Falloff Scale", Range(0.0, 100.0)) = 1.0
         _LavaFlowDirection6("Flow Direction", Vector) = (0.0, 1.0, 0.0, 0.0)
 
-        //Subregion 7
-        [PowerSlider(2.72)] _LavaScale7("Scale", Range(0.001, 2.0)) = 0.5
+[PowerSlider(2.72)] _LavaScale7("Scale", Range(0.001, 2.0)) = 0.5
+_LavaHueShift7("Hue Shift", Range(0.0, 1.0)) = 0.0
         _LavaTopReservoirHeight7("Top Reservoir Height", Float) = 5.0
         _LavaBottomReservoirHeight7("Bottom Reservoir Height", Float) = -5.0
         _LavaCoreColor7("Lava Core Color", Color) = (1.0, 1.0, 1.0, 1.0)
@@ -190,8 +191,8 @@
         [PowerSlider(2.72)] _LavaLightFalloff7("Light Falloff Scale", Range(0.0, 100.0)) = 1.0
         _LavaFlowDirection7("Flow Direction", Vector) = (0.0, 1.0, 0.0, 0.0)
 
-        //Subregion 8
-        [PowerSlider(2.72)] _LavaScale8("Scale", Range(0.001, 2.0)) = 0.5
+[PowerSlider(2.72)] _LavaScale8("Scale", Range(0.001, 2.0)) = 0.5
+_LavaHueShift8("Hue Shift", Range(0.0, 1.0)) = 0.0
         _LavaTopReservoirHeight8("Top Reservoir Height", Float) = 5.0
         _LavaBottomReservoirHeight8("Bottom Reservoir Height", Float) = -5.0
         _LavaCoreColor8("Lava Core Color", Color) = (1.0, 1.0, 1.0, 1.0)
@@ -208,8 +209,8 @@
         [PowerSlider(2.72)] _LavaLightFalloff8("Light Falloff Scale", Range(0.0, 100.0)) = 1.0
         _LavaFlowDirection8("Flow Direction", Vector) = (0.0, 1.0, 0.0, 0.0)
 
-        //Subregion 9
-        [PowerSlider(2.72)] _LavaScale9("Scale", Range(0.001, 2.0)) = 0.5
+[PowerSlider(2.72)] _LavaScale9("Scale", Range(0.001, 2.0)) = 0.5
+_LavaHueShift9("Hue Shift", Range(0.0, 1.0)) = 0.0
         _LavaTopReservoirHeight9("Top Reservoir Height", Float) = 5.0
         _LavaBottomReservoirHeight9("Bottom Reservoir Height", Float) = -5.0
         _LavaCoreColor9("Lava Core Color", Color) = (1.0, 1.0, 1.0, 1.0)
@@ -226,8 +227,8 @@
         [PowerSlider(2.72)] _LavaLightFalloff9("Light Falloff Scale", Range(0.0, 100.0)) = 1.0
         _LavaFlowDirection9("Flow Direction", Vector) = (0.0, 1.0, 0.0, 0.0)
 
-        //Subregion 10
-        [PowerSlider(2.72)] _LavaScale10("Scale", Range(0.001, 2.0)) = 0.5
+[PowerSlider(2.72)] _LavaScale10("Scale", Range(0.001, 2.0)) = 0.5
+_LavaHueShift10("Hue Shift", Range(0.0, 1.0)) = 0.0
         _LavaTopReservoirHeight10("Top Reservoir Height", Float) = 5.0
         _LavaBottomReservoirHeight10("Bottom Reservoir Height", Float) = -5.0
         _LavaCoreColor10("Lava Core Color", Color) = (1.0, 1.0, 1.0, 1.0)
@@ -244,8 +245,8 @@
         [PowerSlider(2.72)] _LavaLightFalloff10("Light Falloff Scale", Range(0.0, 100.0)) = 1.0
         _LavaFlowDirection10("Flow Direction", Vector) = (0.0, 1.0, 0.0, 0.0)
 
-        //Subregion 11
-        [PowerSlider(2.72)] _LavaScale11("Scale", Range(0.001, 2.0)) = 0.5
+[PowerSlider(2.72)] _LavaScale11("Scale", Range(0.001, 2.0)) = 0.5
+_LavaHueShift11("Hue Shift", Range(0.0, 1.0)) = 0.0
         _LavaTopReservoirHeight11("Top Reservoir Height", Float) = 5.0
         _LavaBottomReservoirHeight11("Bottom Reservoir Height", Float) = -5.0
         _LavaCoreColor11("Lava Core Color", Color) = (1.0, 1.0, 1.0, 1.0)
@@ -262,8 +263,8 @@
         [PowerSlider(2.72)] _LavaLightFalloff11("Light Falloff Scale", Range(0.0, 100.0)) = 1.0
         _LavaFlowDirection11("Flow Direction", Vector) = (0.0, 1.0, 0.0, 0.0)
 
-        //Subregion 12
-        [PowerSlider(2.72)] _LavaScale12("Scale", Range(0.001, 2.0)) = 0.5
+[PowerSlider(2.72)] _LavaScale12("Scale", Range(0.001, 2.0)) = 0.5
+_LavaHueShift12("Hue Shift", Range(0.0, 1.0)) = 0.0
         _LavaTopReservoirHeight12("Top Reservoir Height", Float) = 5.0
         _LavaBottomReservoirHeight12("Bottom Reservoir Height", Float) = -5.0
         _LavaCoreColor12("Lava Core Color", Color) = (1.0, 1.0, 1.0, 1.0)
@@ -280,8 +281,8 @@
         [PowerSlider(2.72)] _LavaLightFalloff12("Light Falloff Scale", Range(0.0, 100.0)) = 1.0
         _LavaFlowDirection12("Flow Direction", Vector) = (0.0, 1.0, 0.0, 0.0)
 
-        //Subregion 13
-        [PowerSlider(2.72)] _LavaScale13("Scale", Range(0.001, 2.0)) = 0.5
+[PowerSlider(2.72)] _LavaScale13("Scale", Range(0.001, 2.0)) = 0.5
+_LavaHueShift13("Hue Shift", Range(0.0, 1.0)) = 0.0
         _LavaTopReservoirHeight13("Top Reservoir Height", Float) = 5.0
         _LavaBottomReservoirHeight13("Bottom Reservoir Height", Float) = -5.0
         _LavaCoreColor13("Lava Core Color", Color) = (1.0, 1.0, 1.0, 1.0)
@@ -298,8 +299,8 @@
         [PowerSlider(2.72)] _LavaLightFalloff13("Light Falloff Scale", Range(0.0, 100.0)) = 1.0
         _LavaFlowDirection13("Flow Direction", Vector) = (0.0, 1.0, 0.0, 0.0)
 
-        //Subregion 14
-        [PowerSlider(2.72)] _LavaScale14("Scale", Range(0.001, 2.0)) = 0.5
+[PowerSlider(2.72)] _LavaScale14("Scale", Range(0.001, 2.0)) = 0.5
+_LavaHueShift14("Hue Shift", Range(0.0, 1.0)) = 0.0
         _LavaTopReservoirHeight14("Top Reservoir Height", Float) = 5.0
         _LavaBottomReservoirHeight14("Bottom Reservoir Height", Float) = -5.0
         _LavaCoreColor14("Lava Core Color", Color) = (1.0, 1.0, 1.0, 1.0)
@@ -316,8 +317,8 @@
         [PowerSlider(2.72)] _LavaLightFalloff14("Light Falloff Scale", Range(0.0, 100.0)) = 1.0
         _LavaFlowDirection14("Flow Direction", Vector) = (0.0, 1.0, 0.0, 0.0)
 
-        //Subregion 15
-        [PowerSlider(2.72)] _LavaScale15("Scale", Range(0.001, 2.0)) = 0.5
+[PowerSlider(2.72)] _LavaScale15("Scale", Range(0.001, 2.0)) = 0.5
+_LavaHueShift15("Hue Shift", Range(0.0, 1.0)) = 0.0
         _LavaTopReservoirHeight15("Top Reservoir Height", Float) = 5.0
         _LavaBottomReservoirHeight15("Bottom Reservoir Height", Float) = -5.0
         _LavaCoreColor15("Lava Core Color", Color) = (1.0, 1.0, 1.0, 1.0)

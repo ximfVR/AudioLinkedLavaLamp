@@ -1,6 +1,33 @@
 #ifndef LAVA_LAMP_CORE_HELPER_INCLUDED
 #define LAVA_LAMP_CORE_HELPER_INCLUDED
 
+// Color space conversion functions
+float3 RGBtoHSV(float3 rgb)
+{
+    float4 K = float4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+    float4 p = lerp(float4(rgb.bg, K.wz), float4(rgb.gb, K.xy), step(rgb.b, rgb.g));
+    float4 q = lerp(float4(p.xyw, rgb.r), float4(rgb.r, p.yzx), step(p.x, rgb.r));
+    
+    float d = q.x - min(q.w, q.y);
+    float e = 1.0e-10;
+    return float3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+}
+
+float3 HSVtoRGB(float3 hsv)
+{
+    float4 K = float4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+    float3 p = abs(frac(hsv.xxx + K.xyz) * 6.0 - K.www);
+    return hsv.z * lerp(K.xxx, saturate(p - K.xxx), hsv.y);
+}
+
+// Apply hue shift while preserving saturation and value
+float3 ShiftHue(float3 color, float hueShift)
+{
+    float3 hsv = RGBtoHSV(color);
+    hsv.x = frac(hsv.x + hueShift); // Add hue shift and wrap around
+    return HSVtoRGB(hsv);
+}
+
 static const float3 cHaltonSequence[4] = { float3(0.5, 0.0, 0.333), float3(0.25, 0.0, 0.666), float3(0.75, 0.0, 0.111), float3(0.125, 0.0, 0.444) };
 static const float cBlobLayerJitterScale = 0.6;
 static const float cLavaRaymarchMaxSteps = 50;
@@ -408,6 +435,7 @@ float3 GetLavaLampColor(float3 startPosition, float3 marchDirection, float maxDi
 
 #define DECLARE_LAVA_LAMP_CONSTANTS(id) \
 float _LavaScale##id; \
+float _LavaHueShift##id; \
 float _LavaTopReservoirHeight##id; \
 float _LavaBottomReservoirHeight##id; \
 float3 _LavaFlowDirection##id; \
@@ -434,16 +462,16 @@ float _LavaLightFalloff##id;
 
 #define FILL_LAVA_LAMP_MATERIAL_PARAMETERS(materialParametersStruct, id) \
 { \
-    materialParametersStruct.coreColor = _LavaCoreColor##id; \
-    materialParametersStruct.edgeColor = _LavaEdgeColor##id; \
+    materialParametersStruct.coreColor = ShiftHue(_LavaCoreColor##id, _LavaHueShift##id); \
+    materialParametersStruct.edgeColor = ShiftHue(_LavaEdgeColor##id, _LavaHueShift##id); \
     materialParametersStruct.colorThicknessScale = _LavaColorThicknessScale##id; \
-    materialParametersStruct.waterHazeColor = _LavaWaterHazeColor##id; \
+    materialParametersStruct.waterHazeColor = ShiftHue(_LavaWaterHazeColor##id, _LavaHueShift##id); \
     materialParametersStruct.waterHazeStrength = _LavaWaterHazeStrength##id; \
-    materialParametersStruct.waterTintColor = _LavaWaterTintColor##id; \
+    materialParametersStruct.waterTintColor = ShiftHue(_LavaWaterTintColor##id, _LavaHueShift##id); \
     materialParametersStruct.waterTintStrength = _LavaWaterTintStrength##id; \
-    materialParametersStruct.topLightColor = _LavaTopLightColor##id; \
+    materialParametersStruct.topLightColor = ShiftHue(_LavaTopLightColor##id, _LavaHueShift##id); \
     materialParametersStruct.topLightHeight = _LavaTopLightHeight##id; \
-    materialParametersStruct.bottomLightColor = _LavaBottomLightColor##id; \
+    materialParametersStruct.bottomLightColor = ShiftHue(_LavaBottomLightColor##id, _LavaHueShift##id); \
     materialParametersStruct.bottomLightHeight = _LavaBottomLightHeight##id; \
     materialParametersStruct.lightFalloff = _LavaLightFalloff##id; \
 }
