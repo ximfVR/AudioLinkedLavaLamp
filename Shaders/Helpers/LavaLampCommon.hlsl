@@ -1,7 +1,6 @@
 #ifndef LAVA_LAMP_COMMON_INCLUDED
 #define LAVA_LAMP_COMMON_INCLUDED
 
-#include "UnityCG.cginc"
 #include "LavaLampLightingHelper.hlsl"
 #include "LavaLampCoreHelper.hlsl"
 
@@ -10,6 +9,7 @@ static const float cSDFRaymarchMaxSteps = 100;
 //Parameters --------------------------------------------------------------------------------------
 
 #include "LavaLampSubregionParametersHelper.hlsl"
+#include "LavaLampAudioLinkHelper.hlsl"
 
 float _Reflectiveness;
 
@@ -24,10 +24,19 @@ SamplerState sampler_NormalMap;
 float4 _NormalMap_ST;
 float _NormalStrength;
 
+Texture2D _MatCapMap;
+SamplerState sampler_MatCapMap;
+float4 _MatCapMap_ST;
+float  _MatCapAlpha;
+float  _MatCapColorize;
+float  _MatCapHueShift;
+
 Texture2D _TintMap;
 SamplerState sampler_TintMap;
 float4 _TintMap_ST;
 float3 _Tint;
+float  _TintHueShift;
+float  _TintBrightness;
 
 bool _UseCustomReflectionProbe;
 TextureCube _CustomReflectionProbe;
@@ -35,6 +44,12 @@ SamplerState sampler_CustomReflectionProbe;
 
 float _RefractiveIndex;
 float4 _BackgroundColor;
+
+float3 _RimColor;
+float  _RimHue;
+float  _RimIntensity;
+float  _RimPower;
+float  _BlurFactor;
 
 bool _UseBackgroundCubemap;
 TextureCube _BackgroundCubemap;
@@ -61,7 +76,74 @@ float GetRoughness(float2 uv)
     perceptualRoughness = saturate(lerp(_MinPerceptualRoughness, _MaxPerceptualRoughness, perceptualRoughness));
 
     //unity parameterizes roughness as sqrt of the actual BRDF roughness, for a more linear change in appearence
-    return PerceptualRoughnessToRoughness(perceptualRoughness);
+    return perceptualRoughness * perceptualRoughness;// PerceptualRoughnessToRoughness(perceptualRoughness);
+}
+
+/*vec4 blur13(sampler2D image, vec2 uv, vec2 resolution, vec2 direction) {
+  vec4 color = vec4(0.0);
+  vec2 off1 = vec2(1.411764705882353) * direction;
+  vec2 off2 = vec2(3.2941176470588234) * direction;
+  vec2 off3 = vec2(5.176470588235294) * direction;
+  color += texture2D(image, uv) * 0.1964825501511404;
+  color += texture2D(image, uv + (off1 / resolution)) * 0.2969069646728344;
+  color += texture2D(image, uv - (off1 / resolution)) * 0.2969069646728344;
+  color += texture2D(image, uv + (off2 / resolution)) * 0.09447039785044732;
+  color += texture2D(image, uv - (off2 / resolution)) * 0.09447039785044732;
+  color += texture2D(image, uv + (off3 / resolution)) * 0.010381362401148057;
+  color += texture2D(image, uv - (off3 / resolution)) * 0.010381362401148057;
+  return color;
+}
+*/
+
+// LinearEyeDepth(input.dpos.z / input.dpos.w);
+float3 Blur(sampler2D screen, float2 uv, float factor)
+{
+    float3 res = UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv).rgb * 0.1964825501511404;
+    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv + factor * 1.411764705882353 * 0.707).rgb * 0.0742267411682086;
+    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv - factor * 1.411764705882353 * 0.707).rgb * 0.0742267411682086;
+    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv + factor * 3.294117647058823 * 0.707).rgb * 0.0236175994626119;
+    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv - factor * 3.294117647058823 * 0.707).rgb * 0.0236175994626119;
+    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv + factor * 5.176470588235294 * 0.707).rgb * 0.0051906812005740;
+    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv - factor * 5.176470588235294 * 0.707).rgb * 0.0051906812005740;
+
+    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv + float2(factor, -factor) * 1.411764705882353 * 0.707).rgb * 0.0742267411682086;
+    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv - float2(factor, -factor) * 1.411764705882353 * 0.707).rgb * 0.0742267411682086;
+    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv + float2(factor, -factor) * 3.294117647058823 * 0.707).rgb * 0.0236175994626119;
+    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv - float2(factor, -factor) * 3.294117647058823 * 0.707).rgb * 0.0236175994626119;
+    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv + float2(factor, -factor) * 5.176470588235294 * 0.707).rgb * 0.0051906812005740;
+    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv - float2(factor, -factor) * 5.176470588235294 * 0.707).rgb * 0.0051906812005740;
+
+    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv + float2(factor, 0) * 1.411764705882353).rgb * 0.0742267411682086;
+    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv - float2(factor, 0) * 1.411764705882353).rgb * 0.0742267411682086;
+    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv + float2(0, factor) * 1.411764705882353).rgb * 0.0742267411682086;
+    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv - float2(0, factor) * 1.411764705882353).rgb * 0.0742267411682086;
+
+    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv + float2(factor, 0) * 3.294117647058823).rgb * 0.0236175994626119;
+    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv - float2(factor, 0) * 3.294117647058823).rgb * 0.0236175994626119;
+    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv + float2(0, factor) * 3.294117647058823).rgb * 0.0236175994626119;
+    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv - float2(0, factor) * 3.294117647058823).rgb * 0.0236175994626119;
+    
+    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv + float2(factor, 0) * 5.176470588235294).rgb * 0.0051906812005740;
+    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv - float2(factor, 0) * 5.176470588235294).rgb * 0.0051906812005740;
+    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv + float2(0, factor) * 5.176470588235294).rgb * 0.0051906812005740;
+    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv - float2(0, factor) * 5.176470588235294).rgb * 0.0051906812005740;
+
+    return res;
+}
+
+
+float rimLight(float3 normal, float3 viewDirection)
+{
+    float NdotV = 1 - dot(normal, viewDirection);
+    NdotV = pow(NdotV, _RimPower) * _RimIntensity;
+    return NdotV;
+}
+
+
+float3 hueShift(float3 color, float hue, float brightness) {
+    float3 c = cos(hue * 6.2831 + float3(0, -1.57079632, 3.14159265));
+    float3 res = color * c.x + cross(0.57735, color) * c.y + dot(0.57735, color) * (c.z + 1) * 0.57735;
+    return res * brightness;
 }
 
 float3 GetMappedNormal(float2 uv, float3 worldNormal, float3 worldTangent, float3 worldBitangent, bool isFrontFace)
@@ -109,8 +191,8 @@ float GetModelThickness(float3 startPosition, float3 marchDirection)
         float totalDistance = _SDFPixelSize; //start with a one pixel offset
 
         //raymarch to find the distance to exit the model
-        [loop]
-        for (int step = 0; step < cSDFRaymarchMaxSteps; step++)
+        //[loop]
+        //for (int step = 0; step < cSDFRaymarchMaxSteps; ++step)
         {
             float3 uvw = startPosition + (marchDirection * totalDistance);
             float distaceToSurface = -_SDFTexture.SampleLevel(sampler_SDFTexture, uvw, 0.0).r; //invert the SDF
@@ -121,7 +203,7 @@ float GetModelThickness(float3 startPosition, float3 marchDirection)
                 return max(_MinThickness, totalDistance + distaceToSurface); //add the final (negative) distance to back up to the surface
             }
 
-            totalDistance += max(distaceToSurface, (_SDFPixelSize / 3.0)); //always step at least a third of a pixel
+            totalDistance = max(distaceToSurface, (_SDFPixelSize * 0.3333333)); //always step at least a third of a pixel
         }
 
         return max(_MinThickness, totalDistance); //if we run out of steps just return the distance we stopped at
@@ -208,8 +290,11 @@ float3 GetBackground(float3 worldPos, float3 traceDirection, inout float distanc
     float2 screenUV = screenPos.xy / screenPos.w;
     screenUV = screenUV > 1.0 ? 2.0 - screenUV : abs(screenUV); //mirror on edges of screen
 
+    //float d = SAMPLE_DEPTH_TEXTURE_LOD(_CameraDepthTexture, float4(screenUV, 0.0, 0.0));
+
     //alpha blend _BackgroundColor over the actual background when the background isn't inside the lava lamp
-    return lerp(UNITY_SAMPLE_SCREENSPACE_TEXTURE(_LavaLampGrabTexture, screenUV).rgb,
+    return lerp(_BlurFactor > 0 ? Blur(_LavaLampGrabTexture, screenUV, _BlurFactor * 0.002 ) :
+                UNITY_SAMPLE_SCREENSPACE_TEXTURE(_LavaLampGrabTexture, screenUV).rgb,
                 backgroundColor.rgb,
                 isBackgroundInsideLamp ? 0.0 : backgroundColor.a);
 #else
@@ -320,6 +405,7 @@ struct LavaLampBasePixelInput
     float3 bindPosition : TEXCOORD4;
     float3 bindNormal : TEXCOORD5;
     float4 bindTangent : TEXCOORD6;
+
     nointerpolation uint lavaIndex : TEXCOORD7;
     UNITY_FOG_COORDS(8)
 #ifdef LAVA_LAMP_USE_LIGHTING
@@ -450,6 +536,8 @@ LavaLampShadowPixelInput LavaLampShadowVertexShader(LavaLampVertexShadow v)
     return output;
 }
 
+
+
 //Pixel Shaders -----------------------------------------------------------------------------------
 
 float4 LavaLampBasePixelShader(LavaLampBasePixelInput input, bool isFrontFace : SV_IsFrontFace) : SV_Target
@@ -494,7 +582,7 @@ float4 LavaLampBasePixelShader(LavaLampBasePixelInput input, bool isFrontFace : 
 
     //evaluate the lava lamp
     float3 lampColor = GetLavaLampColor(input.bindPosition, traceDirection, thickness, backgroundColor, input.lavaIndex);
-
+    lampColor = LavaLampAudioLinkSetColorBasedOnAudioLinkData(lampColor, input.pos, input.uv.xy);
     //calculate the glass surface lighting
 
     float roughness = GetRoughness(input.uv);
@@ -522,8 +610,24 @@ float4 LavaLampBasePixelShader(LavaLampBasePixelInput input, bool isFrontFace : 
 
     //composite the final color
     float3 glassTint = _Tint * _TintMap.Sample(sampler_TintMap, TRANSFORM_TEX(input.uv, _TintMap)).rgb;
-    float3 finalColor = glassLighting + (lampColor * glassTint * (1.0 - _Reflectiveness));
+    glassTint = hueShift(glassTint, _TintHueShift, _TintBrightness);
 
+    float3 worldNorm = mul(UNITY_MATRIX_V, input.worldNormal).rgb;
+
+    worldNorm = mul(UNITY_MATRIX_V, mappedNormal).rgb;
+    float3 NormalBlend_MatCapUV_Detail = worldNorm * float3(-1, -1, 1);
+    float3 NormalBlend_MatCapUV_Base = (mul(UNITY_MATRIX_V, float4(-viewDirection, 0)).rgb * float3(-1, -1, 1)) + float3(0, 0, 1);
+    float3 noSknewViewNormal = NormalBlend_MatCapUV_Base * dot(NormalBlend_MatCapUV_Base, NormalBlend_MatCapUV_Detail) / NormalBlend_MatCapUV_Base.b - NormalBlend_MatCapUV_Detail;
+
+    float2 cap = noSknewViewNormal.xy * 0.5 + 0.5;
+
+    float4 mc = _MatCapMap.Sample(sampler_MatCapMap, TRANSFORM_TEX(cap, _MatCapMap));
+    mc.rgb = hueShift(lerp(mc.rgb, mc.rgb * float3(1,0,0), _MatCapColorize), _MatCapHueShift, 1.0);
+
+    float3 finalColor = glassLighting + (lampColor * glassTint * (1.0 - _Reflectiveness)) + mc * _MatCapAlpha;
+    float3 rim = hueShift(_RimColor, _RimHue, 1) * rimLight(input.worldNormal, -viewDirection);
+    finalColor = finalColor + rim; //custom
+    
     //apply fog (technically this will be applying fog to the background twice but it's not too noticeable in practice)
     UNITY_APPLY_FOG(input.fogCoord, finalColor);
 

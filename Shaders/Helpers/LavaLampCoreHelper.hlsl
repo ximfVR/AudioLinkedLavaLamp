@@ -3,9 +3,12 @@
 
 static const float3 cHaltonSequence[4] = { float3(0.5, 0.0, 0.333), float3(0.25, 0.0, 0.666), float3(0.75, 0.0, 0.111), float3(0.125, 0.0, 0.444) };
 static const float cBlobLayerJitterScale = 0.6;
-static const float cLavaRaymarchMaxSteps = 100;
-static const float cLavaRaymarchMinStepLength = 0.01;
+static const float cLavaRaymarchMaxSteps = 50;
+static const float cLavaRaymarchMinStepLength = 0.4;
 static const float cNormalEPS = 0.05;
+
+
+#include "LavaLampAudioLinkHelper.hlsl"
 
 #include "LavaLampLightingHelper.hlsl"
 
@@ -106,7 +109,7 @@ float2 LavaSmoothMinWithValueBlend(float2 distanceAndValueA, float2 distanceAndV
     float blendFactor = max(0.0, _LavaSmoothingFactor - abs(distanceAndValueA.x - distanceAndValueB.x)) / _LavaSmoothingFactor;
     float blendedDistance = min(distanceAndValueA.x, distanceAndValueB.x) - (_LavaSmoothingFactor * blendFactor * blendFactor / 4.0);
 
-    float valueBlend = blendFactor * blendFactor / 2.0;
+    float valueBlend = blendFactor * blendFactor * 0.5;
     valueBlend = distanceAndValueA.x < distanceAndValueB.x ? valueBlend : 1.0 - valueBlend;
 
     return float2(blendedDistance, lerp(distanceAndValueA.y, distanceAndValueB.y, valueBlend));
@@ -136,7 +139,7 @@ float2 GetLavaLampLightAttenuations(float height, LavaLampMaterialParameters mat
     float2 lightDistances = float2(height - materialParameters.bottomLightHeight, materialParameters.topLightHeight - height);
     lightDistances = max(0.0, lightDistances * materialParameters.lightFalloff); //rescale distance
 
-    return 1.0 - (lightDistances / sqrt((lightDistances * lightDistances) + 2.0));
+    return 1.0 - (lightDistances * rsqrt((lightDistances * lightDistances) + 2.0));
 }
 
 //Raymarching Functions ---------------------------------------------------------------------------
@@ -150,14 +153,17 @@ float2 GetDistanceAndRadiusOfLavaBlob(float3 blobCoord, uint layerIndex)
 
     int2 columnIndex = floor(blobCoord.xz);
     uint columnSeed = columnIndex.x ^ (columnIndex.y << 16) ^ (layerIndex << 30);
-
+    
     //get the blob's vertical speed
+    
     float scrollSpeed = lerp(_LavaMinSpeed, _LavaMaxSpeed, RandomNormalized(columnSeed));
+   
     scrollSpeed *= ((columnSeed & 1) == 0) ? 1.0 : -1.0; //make half of the blobs flow up and half flow down
-
+    scrollSpeed = LavaLampAudioLinkSpeedMultiplier(scrollSpeed);
     //scroll the columns vertically
     blobCoord.y -= scrollSpeed * _Time.y;
     blobCoord.y -= (columnSeed % 1024) / 1024.0; //add some extra starting variation for when the lava speed is 0
+
     blobCoord.y /= _LavaVerticalSeparation;
 
     //Per Blob Properties
@@ -165,15 +171,20 @@ float2 GetDistanceAndRadiusOfLavaBlob(float3 blobCoord, uint layerIndex)
     int3 blobIndex = floor(blobCoord);
     uint blobSeed = blobIndex.y ^ (blobIndex.z << 10) ^ (blobIndex.x << 20) ^ (layerIndex << 30);
 
+    float bs = RandomNormalized(blobSeed);
     //skip a certain percentage of blobs, just return arbitrarily far distance instead
-    if (RandomNormalized(blobSeed) < _LavaSkipChance)
+    if (bs < _LavaSkipChance)
     {
         return float2(100000000.0, 0.0);
     }
 
     //get the blob's radius
-    float blobRadius = RandomNormalized(blobSeed);
-    blobRadius = pow(blobRadius, exp(-_LavaSizeDistribution)); //adjust the curve of the size distribution
+    float blobRadius = bs;// RandomNormalized(blobSeed);
+    float LavaSizeDistributionModifier = LavaLampAudioLinkBlobResizeMultiplier(_LavaSizeDistribution);
+    float LavaSizeDistributionModifierClamped = clamp(LavaSizeDistributionModifier, -3.1, 3.1);
+    
+    blobRadius = pow(blobRadius, exp(-LavaSizeDistributionModifierClamped)); //adjust the curve of the size distribution
+    
     blobRadius = lerp(_LavaMinSize, _LavaMaxSize, blobRadius); //remap the 0-1 range to the specified min and max
 
     float maxBlobRadius = 0.5 - _LavaPadding; //leave some space for padding
@@ -182,15 +193,15 @@ float2 GetDistanceAndRadiusOfLavaBlob(float3 blobCoord, uint layerIndex)
 
     //get the position of the blob
     float minDistanceFromSide = blobRadius + _LavaPadding; //can't offset the blob any closer than this to the edge of its bounding box
-    float blobVerticalPosition = lerp(minDistanceFromSide, _LavaVerticalSeparation - minDistanceFromSide, RandomNormalized(blobSeed));
-
+    float blobVerticalPosition = lerp(minDistanceFromSide, _LavaVerticalSeparation - minDistanceFromSide, bs);
+    
     //have the blob drift horizontally in an elipse 
-    float axisRotation = RandomNormalized(blobSeed) * 2.0 * UNITY_PI;
-    float eccentricity = (RandomNormalized(blobSeed) * 2.0) - 1.0; //rotation direction will be flipped half of the time
+    float axisRotation = bs * 2.0 * UNITY_PI;
+    float eccentricity = (bs * 2.0) - 1.0; //rotation direction will be flipped half of the time
     float2 majorAxis = float2(cos(axisRotation), sin(axisRotation));
     float2 minorAxis = float2(-majorAxis.y, majorAxis.x) * eccentricity;
     
-    float driftSpeed = lerp(_LavaMinDriftSpeed, _LavaMaxDriftSpeed, RandomNormalized(blobSeed)) * scrollSpeed; //scale drift speed to scroll speed
+    float driftSpeed = lerp(_LavaMinDriftSpeed, _LavaMaxDriftSpeed, bs) * scrollSpeed; //scale drift speed to scroll speed
     float driftProgression = driftSpeed * 2.0 * _Time.y; //multiply by 2 because the max radius of drift is 0.5
     driftProgression += ((blobSeed % 1024) / 1024.0) * 2.0 * UNITY_PI; //add some extra starting variation for when the lava drift speed is 0
     
@@ -239,7 +250,7 @@ float RaymarchLavaSurface(float3 startPosition, float3 marchDirection, float max
 
         //if we are close enough to the surface
         [branch]
-        if (distanceToSurface <= 0.0)
+        if (distanceToSurface < 0.0)
         {
             //make the final step to return to the surface since we are inside of it
             totalDistance += distanceToSurface;

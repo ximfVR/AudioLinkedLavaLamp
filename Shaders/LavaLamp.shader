@@ -11,9 +11,20 @@
         _NormalStrength("Normal Map Strength", Range(0.0, 1.0)) = 1.0
         _TintMap("Tint Map", 2D) = "white" {}
         _Tint("Tint Multiplier", Color) = (1.0, 1.0, 1.0, 1.0)
+        _TintHueShift("Tint Hue Shift", Range(0.0, 1.0)) = 0.0
+        _TintBrightness("Tint Brightness", Range(0.0, 1.0)) = 1.0
+        _MatCapMap("MatCap Map", 2D) = "white" {}
+        _MatCapAlpha("MatCap Alpha", Range(0.0, 1.0)) = 1.0
+        _MatCapHueShift("MatCap Hue Shift", Range(0.0, 1.0)) = 0.0
+        _MatCapColorize("MatCap Colorize", Range(0.0, 1.0)) = 0.0
+        _RimColor("Rim Color", Color) = (1.0, 0.0, 0.0, 1.0)
+        _RimHue("Rim Hue", Range(0.0, 1.0)) = 0.0
+        _RimIntensity("Rim Intensity", Range(0.0, 1.0)) = 0.1
+        _RimPower("Rim Power", Range(1.0, 8.0)) = 2.0
         [NoScaleOffset] _CustomReflectionProbe("Custom Reflection Probe", Cube) = "black" {}
         [Toggle] _UseCustomReflectionProbe("Use Custom Reflection Probe", Float) = 0.0
         _RefractiveIndex("Refractive Index", Range(1.0, 1.5)) = 1.1
+        _BlurFactor("Blur", Range(0.0, 1.0)) = 0.0
         [HDR] _BackgroundColor("Background Color", Color) = (0.0, 0.0, 0.0, 0.0)
         [NoScaleOffset] _BackgroundCubemap("Background Cubemap", Cube) = "black" {}
         [Toggle] _UseBackgroundCubemap("Use Background Cubemap", Float) = 0.0
@@ -348,12 +359,28 @@
         [Toggle] _WriteDepth_Toggle("Write Depth", Float) = 1.0
         
         [HideInInspector] _ZWrite("ZWrite", Float) = 1.0
+
+        // Audio Link Options
+        [PowerSlider(2.72)] _LavaReactiveColorOffsetRed("Lava Reactive Offset Color Red", Range(0.0, 8.0)) = 4.0
+        [PowerSlider(2.72)] _LavaReactiveColorOffsetGreen("Lava Reactive Offset Color Green", Range(0.0, 8.0)) = 4.0
+        [PowerSlider(2.72)] _LavaReactiveColorOffsetBlue("Lava Reactive Offset Color Blue", Range(0.0, 8.0)) = 4.0
+        [PowerSlider(2.72)] _LavaLampReactiveResizeModifier("Lava Reactive Resize Modifier", Range(0.0, 4.0)) = 2.00
+        [PowerSlider(2.72)] _LavaLampScrollAdjustment("Lava Scroll Adjustment", Range(1.0, 5000.0)) = 500.00
+        [Toggle] _LavaLampEnableAudioLink_Toggle("Enable Audio Link", Float) = 0.0
+        [Toggle] _LavaLampEnableAudioLinkResize_Toggle("Enable Audio Link Resizing", Float) = 0.0
+        [Toggle] _LavaLampEnableAudioLinkColor_Toggle("Enable Audio Link Colors", Float) = 0.0
+        [Toggle] _LavaLampEnableAudioLinkScroll_Toggle("Enable Audio Link Scroll Modification", Float) = 0.0
+        [Enum( Bass, 0, LowMid, 1, HighMid, 2, Treble, 3, Smoothed Bass, 10)] _LavaLampResizeTargetChannel("Target Channel For LL Resize", Int) = 10 
+        [Enum( Bass, 0, LowMid, 1, HighMid, 2, Treble, 3, Smoothed Bass, 10)] _LavaLampScrollTargetChannel("Target Channel For LL Scroll", Int) = 10
+        [Enum( Bass, 0, LowMid, 1, HighMid, 2, Treble, 3, Smoothed Bass, 10)] _LavaLampColorTargetChannel("Target Channel For LL Color", Int) = 10 
     }
 
     SubShader
     {
         Tags { "Queue" = "Transparent" "DisableBatching" = "True" "IgnoreProjector" = "True" }
         Offset [_DepthOffset], [_DepthOffset]
+
+        
         
         GrabPass
         {
@@ -455,6 +482,37 @@
             
             ENDHLSL
         }
+
+        /*GrabPass {}
+        
+        Pass
+        {
+            Name "CustomOverlay"
+            
+            ZWrite Off
+            Cull Off
+            Blend One OneMinusSrcColor
+            ColorMask RGB
+            Lighting Off
+            
+
+            HLSLPROGRAM
+
+            #pragma target 5.0
+            #pragma multi_compile_shadowcaster
+            #pragma multi_compile_instancing
+
+            #pragma vertex LavaLampCustomExtVert
+            #pragma fragment LavaLampCustomExtFrag
+
+            #pragma fragmentoption ARB_precision_hint_fastest
+            #pragma multi_compile_fog
+            
+            #include "Helpers/LavaLampExt.hlsl"
+
+            
+            ENDHLSL
+        }*/
     }
 
     CustomEditor "LavaLampShaderGUI"
