@@ -11,6 +11,8 @@ static const float cSDFRaymarchMaxSteps = 100;
 #include "LavaLampSubregionParametersHelper.hlsl"
 #include "LavaLampAudioLinkHelper.hlsl"
 
+#include "UnityCG.cginc"
+
 float _Reflectiveness;
 
 Texture2D _RoughnessMap;
@@ -65,7 +67,12 @@ float _SDFPixelSize;
 float _WorldRecale;
 float _MinThickness;
 
-UNITY_DECLARE_SCREENSPACE_TEXTURE(_LavaLampGrabTexture);
+#if defined(UNITY_STEREO_INSTANCING_ENABLED) || defined(UNITY_STEREO_MULTIVIEW_ENABLED)
+    Texture2D _LavaLampGrabTexture; 
+#else
+    Texture2D _LavaLampGrabTexture;
+#endif
+SamplerState sampler_LavaLampGrabTexture;
 UNITY_DECLARE_DEPTH_TEXTURE(_CameraDepthTexture);
 
 //Helpers Functions -------------------------------------------------------------------------------
@@ -95,39 +102,77 @@ float GetRoughness(float2 uv)
 }
 */
 
-// LinearEyeDepth(input.dpos.z / input.dpos.w);
-float3 Blur(sampler2D screen, float2 uv, float factor)
-{
-    float3 res = UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv).rgb * 0.1964825501511404;
-    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv + factor * 1.411764705882353 * 0.707).rgb * 0.0742267411682086;
-    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv - factor * 1.411764705882353 * 0.707).rgb * 0.0742267411682086;
-    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv + factor * 3.294117647058823 * 0.707).rgb * 0.0236175994626119;
-    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv - factor * 3.294117647058823 * 0.707).rgb * 0.0236175994626119;
-    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv + factor * 5.176470588235294 * 0.707).rgb * 0.0051906812005740;
-    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv - factor * 5.176470588235294 * 0.707).rgb * 0.0051906812005740;
 
-    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv + float2(factor, -factor) * 1.411764705882353 * 0.707).rgb * 0.0742267411682086;
-    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv - float2(factor, -factor) * 1.411764705882353 * 0.707).rgb * 0.0742267411682086;
-    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv + float2(factor, -factor) * 3.294117647058823 * 0.707).rgb * 0.0236175994626119;
-    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv - float2(factor, -factor) * 3.294117647058823 * 0.707).rgb * 0.0236175994626119;
-    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv + float2(factor, -factor) * 5.176470588235294 * 0.707).rgb * 0.0051906812005740;
-    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv - float2(factor, -factor) * 5.176470588235294 * 0.707).rgb * 0.0051906812005740;
 
-    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv + float2(factor, 0) * 1.411764705882353).rgb * 0.0742267411682086;
-    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv - float2(factor, 0) * 1.411764705882353).rgb * 0.0742267411682086;
-    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv + float2(0, factor) * 1.411764705882353).rgb * 0.0742267411682086;
-    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv - float2(0, factor) * 1.411764705882353).rgb * 0.0742267411682086;
 
-    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv + float2(factor, 0) * 3.294117647058823).rgb * 0.0236175994626119;
-    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv - float2(factor, 0) * 3.294117647058823).rgb * 0.0236175994626119;
-    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv + float2(0, factor) * 3.294117647058823).rgb * 0.0236175994626119;
-    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv - float2(0, factor) * 3.294117647058823).rgb * 0.0236175994626119;
+#ifndef samplerscreen
     
-    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv + float2(factor, 0) * 5.176470588235294).rgb * 0.0051906812005740;
-    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv - float2(factor, 0) * 5.176470588235294).rgb * 0.0051906812005740;
-    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv + float2(0, factor) * 5.176470588235294).rgb * 0.0051906812005740;
-    res += UNITY_SAMPLE_SCREENSPACE_TEXTURE(screen, uv - float2(0, factor) * 5.176470588235294).rgb * 0.0051906812005740;
+#endif
+// LinearEyeDepth(input.dpos.z / input.dpos.w);
+float3 Blur(Texture2D<float4> screen, float2 uv, float factor)
+{
+    #if defined(UNITY_STEREO_INSTANCING_ENABLED) || defined(UNITY_STEREO_MULTIVIEW_ENABLED)
 
+        float3 res = _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, float3(uv, (float)unity_StereoEyeIndex)).rgb * 0.1964825501511404;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, float3(uv + factor * 1.411764705882353 * 0.707, (float)unity_StereoEyeIndex)).rgb * 0.0742267411682086;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, float3(uv - factor * 1.411764705882353 * 0.707, (float)unity_StereoEyeIndex)).rgb * 0.0742267411682086;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, float3(uv + factor * 3.294117647058823 * 0.707, (float)unity_StereoEyeIndex)).rgb * 0.0236175994626119;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, float3(uv - factor * 3.294117647058823 * 0.707, (float)unity_StereoEyeIndex)).rgb * 0.0236175994626119;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, float3(uv + factor * 5.176470588235294 * 0.707, (float)unity_StereoEyeIndex)).rgb * 0.0051906812005740;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, float3(uv - factor * 5.176470588235294 * 0.707, (float)unity_StereoEyeIndex)).rgb * 0.0051906812005740;
+
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, float3(uv + float2(factor, -factor) * 1.411764705882353 * 0.707, (float)unity_StereoEyeIndex)).rgb * 0.0742267411682086;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, float3(uv - float2(factor, -factor) * 1.411764705882353 * 0.707, (float)unity_StereoEyeIndex)).rgb * 0.0742267411682086;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, float3(uv + float2(factor, -factor) * 3.294117647058823 * 0.707, (float)unity_StereoEyeIndex)).rgb * 0.0236175994626119;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, float3(uv - float2(factor, -factor) * 3.294117647058823 * 0.707, (float)unity_StereoEyeIndex)).rgb * 0.0236175994626119;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, float3(uv + float2(factor, -factor) * 5.176470588235294 * 0.707, (float)unity_StereoEyeIndex)).rgb * 0.0051906812005740;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, float3(uv - float2(factor, -factor) * 5.176470588235294 * 0.707, (float)unity_StereoEyeIndex)).rgb * 0.0051906812005740;
+
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, float3(uv + float2(factor, 0) * 1.411764705882353, (float)unity_StereoEyeIndex)).rgb * 0.0742267411682086;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, float3(uv - float2(factor, 0) * 1.411764705882353, (float)unity_StereoEyeIndex)).rgb * 0.0742267411682086;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, float3(uv + float2(0, factor) * 1.411764705882353, (float)unity_StereoEyeIndex)).rgb * 0.0742267411682086;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, float3(uv - float2(0, factor) * 1.411764705882353, (float)unity_StereoEyeIndex)).rgb * 0.0742267411682086;
+
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, float3(uv + float2(factor, 0) * 3.294117647058823, (float)unity_StereoEyeIndex)).rgb * 0.0236175994626119;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, float3(uv - float2(factor, 0) * 3.294117647058823, (float)unity_StereoEyeIndex)).rgb * 0.0236175994626119;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, float3(uv + float2(0, factor) * 3.294117647058823, (float)unity_StereoEyeIndex)).rgb * 0.0236175994626119;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, float3(uv - float2(0, factor) * 3.294117647058823, (float)unity_StereoEyeIndex)).rgb * 0.0236175994626119;
+        
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, float3(uv + float2(factor, 0) * 5.176470588235294, (float)unity_StereoEyeIndex)).rgb * 0.0051906812005740;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, float3(uv - float2(factor, 0) * 5.176470588235294, (float)unity_StereoEyeIndex)).rgb * 0.0051906812005740;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, float3(uv + float2(0, factor) * 5.176470588235294, (float)unity_StereoEyeIndex)).rgb * 0.0051906812005740;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, float3(uv - float2(0, factor) * 5.176470588235294, (float)unity_StereoEyeIndex)).rgb * 0.0051906812005740;
+    #else
+        float3 res = _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, uv).rgb * 0.1964825501511404;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, uv + factor * 1.411764705882353 * 0.707).rgb * 0.0742267411682086;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, uv - factor * 1.411764705882353 * 0.707).rgb * 0.0742267411682086;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, uv + factor * 3.294117647058823 * 0.707).rgb * 0.0236175994626119;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, uv - factor * 3.294117647058823 * 0.707).rgb * 0.0236175994626119;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, uv + factor * 5.176470588235294 * 0.707).rgb * 0.0051906812005740;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, uv - factor * 5.176470588235294 * 0.707).rgb * 0.0051906812005740;
+
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, uv + float2(factor, -factor) * 1.411764705882353 * 0.707).rgb * 0.0742267411682086;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, uv - float2(factor, -factor) * 1.411764705882353 * 0.707).rgb * 0.0742267411682086;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, uv + float2(factor, -factor) * 3.294117647058823 * 0.707).rgb * 0.0236175994626119;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, uv - float2(factor, -factor) * 3.294117647058823 * 0.707).rgb * 0.0236175994626119;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, uv + float2(factor, -factor) * 5.176470588235294 * 0.707).rgb * 0.0051906812005740;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, uv - float2(factor, -factor) * 5.176470588235294 * 0.707).rgb * 0.0051906812005740;
+
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, uv + float2(factor, 0) * 1.411764705882353).rgb * 0.0742267411682086;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, uv - float2(factor, 0) * 1.411764705882353).rgb * 0.0742267411682086;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, uv + float2(0, factor) * 1.411764705882353).rgb * 0.0742267411682086;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, uv - float2(0, factor) * 1.411764705882353).rgb * 0.0742267411682086;
+
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, uv + float2(factor, 0) * 3.294117647058823).rgb * 0.0236175994626119;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, uv - float2(factor, 0) * 3.294117647058823).rgb * 0.0236175994626119;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, uv + float2(0, factor) * 3.294117647058823).rgb * 0.0236175994626119;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, uv - float2(0, factor) * 3.294117647058823).rgb * 0.0236175994626119;
+        
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, uv + float2(factor, 0) * 5.176470588235294).rgb * 0.0051906812005740;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, uv - float2(factor, 0) * 5.176470588235294).rgb * 0.0051906812005740;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, uv + float2(0, factor) * 5.176470588235294).rgb * 0.0051906812005740;
+        res += _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, uv - float2(0, factor) * 5.176470588235294).rgb * 0.0051906812005740;
+    #endif
     return res;
 }
 
@@ -292,11 +337,20 @@ float3 GetBackground(float3 worldPos, float3 traceDirection, inout float distanc
 
     //float d = SAMPLE_DEPTH_TEXTURE_LOD(_CameraDepthTexture, float4(screenUV, 0.0, 0.0));
 
-    //alpha blend _BackgroundColor over the actual background when the background isn't inside the lava lamp
-    return lerp(_BlurFactor > 0 ? Blur(_LavaLampGrabTexture, screenUV, _BlurFactor * 0.002 ) :
-                UNITY_SAMPLE_SCREENSPACE_TEXTURE(_LavaLampGrabTexture, screenUV).rgb,
-                backgroundColor.rgb,
-                isBackgroundInsideLamp ? 0.0 : backgroundColor.a);
+    #if defined(UNITY_STEREO_INSTANCING_ENABLED) || defined(UNITY_STEREO_MULTIVIEW_ENABLED)
+
+        //alpha blend _BackgroundColor over the actual background when the background isn't inside the lava lamp
+        return lerp(_BlurFactor > 0 ? Blur(_LavaLampGrabTexture, screenUV, _BlurFactor * 0.002 ) :
+                    _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, float3(screenUV, (float)unity_StereoEyeIndex)).rgb,
+                    backgroundColor.rgb,
+                    isBackgroundInsideLamp ? 0.0 : backgroundColor.a);
+    #else
+            //alpha blend _BackgroundColor over the actual background when the background isn't inside the lava lamp
+        return lerp(_BlurFactor > 0 ? Blur(_LavaLampGrabTexture, screenUV, _BlurFactor * 0.002 ) :
+                    _LavaLampGrabTexture.Sample(sampler_LavaLampGrabTexture, screenUV).rgb,
+                    backgroundColor.rgb,
+                    isBackgroundInsideLamp ? 0.0 : backgroundColor.a);
+    #endif
 #else
     //if the lamp isn't transparent just return a solid color
     return backgroundColor.rgb;
